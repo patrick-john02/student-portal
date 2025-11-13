@@ -40,30 +40,35 @@ async def get_teacher(teacher_id: int, db: AsyncSession = Depends(get_async_sess
     return teacher
 
 
-@router.put("/{teacher_id}", response_model = TeacherRead)
-async def update_teacher(teacher_id: int, updated_data: TeacherCreate, db: AsyncSession = Depends(get_async_session)):
+@router.put("/{teacher_id}", response_model=TeacherRead)
+async def update_teacher(
+    teacher_id: int,
+    updated_data: TeacherCreate,
+    db: AsyncSession = Depends(get_async_session)
+):
     result = await db.execute(select(Teacher).where(Teacher.id == teacher_id))
     existing = result.scalar_one_or_none()
+
     if not existing:
-        raise HTTPException(status_code = 404, detail = "teacher not found")
-    
-    for key , value in updated_data.model_dump().items():
+        raise HTTPException(status_code=404, detail="Teacher not found")
+
+    for key, value in updated_data.model_dump().items():
         setattr(existing, key, value)
 
-    
     db.add(existing)
-    await db.commit()
+    await db.commit()     
     await db.refresh(existing)
     return existing
 
 
-@router.delete("/{teacher_id}", status_code = status.HTTP_204_NO_CONTENT)
-async def delete_teacher(teacher_id: int, db:AsyncSession = Depends(get_async_session)):
+@router.delete("/{teacher_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_teacher(teacher_id: int, db: AsyncSession = Depends(get_async_session)):
     result = await db.execute(select(Teacher).where(Teacher.id == teacher_id))
     teacher = result.scalar_one_or_none()
+
     if not teacher:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    
+        raise HTTPException(status_code=404, detail="Teacher not found")
+
     await db.delete(teacher)
-    await db.commit()
+    await db.commit()  
     return None

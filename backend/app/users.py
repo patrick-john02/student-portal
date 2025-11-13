@@ -7,11 +7,10 @@ from fastapi import Depends
 from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
 from fastapi_users.authentication import AuthenticationBackend, BearerTransport, JWTStrategy
 from app.db import User, get_user_db
+import os
 
-SECRET = "CHANGE_THIS_SECRET_KEY"  # Use os.getenv("SECRET_KEY") in production
+SECRET = os.getenv("SECRET_KEY", "CHANGE_THIS_SECRET_KEY_IN_PRODUCTION")
 
-
-# ---------- USER MANAGER ----------
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
@@ -20,7 +19,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         print(f"✅ New user registered: {user.email}")
 
     async def on_after_forgot_password(self, user: User, token: str, request=None):
-        print(f"🔑 Password reset for {user.email}: {token}")
+        print(f"🔒 Password reset for {user.email}: {token}")
 
     async def on_after_request_verify(self, user: User, token: str, request=None):
         print(f"📧 Verification requested for {user.email}: {token}")

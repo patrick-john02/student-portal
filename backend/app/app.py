@@ -1,77 +1,65 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from app.db import Student, get_async_session
-from app.schemas import StudentCreate, StudentRead
-from app.users import current_active_user
+# app.py
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
-router = APIRouter(
-    prefix="/students",
-    tags=["Students"],
-    dependencies=[Depends(current_active_user)],
+from app.db import init_db, get_async_session, User, Student
+from app.users import fastapi_users, auth_backend, current_active_user
+from app.schemas import UserRead, UserCreate, StudentRead, StudentCreate
+
+from app.routers.students import router as student_router
+
+
+# ============================================================
+# LIFESPAN (replaces deprecated @app.on_event("startup"))
+# ============================================================
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("🚀 Initializing database...")
+    await init_db()
+    yield
+    print("🛑 Shutting down...")
+
+
+# ============================================================
+# MAIN APP
+# ============================================================
+app = FastAPI(
+    title="Senior High School Student Portal",
+    lifespan=lifespan
 )
 
 
-# ---------- CREATE STUDENT ----------
-@router.post("/", response_model=StudentRead, status_code=status.HTTP_201_CREATED)
-async def create_student(
-    student: StudentCreate,
-    db: AsyncSession = Depends(get_async_session),
-):
-    new_student = Student(**student.model_dump())
-    db.add(new_student)
-    await db.commit()
-    await db.refresh(new_student)
-    return new_student
+# ============================================================
+# AUTH ROUTES
+# ============================================================
+app.include_router(
+    fastapi_users.get_auth_router(auth_backend),
+    prefix="/auth/jwt",
+    tags=["Auth"]
+)
+
+app.include_router(
+    fastapi_users.get_register_router(UserRead, UserCreate),
+    prefix="/auth",
+    tags=["Auth"]
+)
+
+app.include_router(
+    fastapi_users.get_users_router(UserRead),
+    prefix="/users",
+    tags=["Users"]
+)
 
 
-# ---------- READ ALL STUDENTS ----------
-@router.get("/", response_model=list[StudentRead])
-async def get_students(db: AsyncSession = Depends(get_async_session)):
-    result = await db.execute(select(Student))
-    students = result.scalars().all()
-    return students
+# ============================================================
+# STUDENT ROUTER
+# ============================================================
+app.include_router(student_router)
 
 
-# ---------- READ SINGLE STUDENT ----------
-@router.get("/{student_id}", response_model=StudentRead)
-async def get_student(student_id: int, db: AsyncSession = Depends(get_async_session)):
-    result = await db.execute(select(Student).where(Student.id == student_id))
-    student = result.scalar_one_or_none()
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
-    return student
-
-
-# ---------- UPDATE STUDENT ----------
-@router.put("/{student_id}", response_model=StudentRead)
-async def update_student(
-    student_id: int,
-    updated_data: StudentCreate,
-    db: AsyncSession = Depends(get_async_session),
-):
-    result = await db.execute(select(Student).where(Student.id == student_id))
-    existing = result.scalar_one_or_none()
-    if not existing:
-        raise HTTPException(status_code=404, detail="Student not found")
-
-    for key, value in updated_data.model_dump().items():
-        setattr(existing, key, value)
-
-    db.add(existing)
-    await db.commit()
-    await db.refresh(existing)
-    return existing
-
-
-# ---------- DELETE STUDENT ----------
-@router.delete("/{student_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_student(student_id: int, db: AsyncSession = Depends(get_async_session)):
-    result = await db.execute(select(Student).where(Student.id == student_id))
-    student = result.scalar_one_or_none()
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
-
-    await db.delete(student)
-    await db.commit()
-    return None
+# ============================================================
+# ROOT
+# ============================================================
+@app.get("/")
+async def root():
+    return {"message": "Student Portal API is running 🚀"}
