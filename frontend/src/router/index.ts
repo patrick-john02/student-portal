@@ -50,15 +50,15 @@ const TeacherSettingsPreferences = () => import("@/pages/teacher/settings/Prefer
 
 // Student Pages
 const StudentDashboard = () => import("@/pages/student/Dashboard.vue");
-// const StudentSubjects = () => import("@/pages/student/Subjects.vue");
-// const StudentSchedule = () => import("@/pages/student/Schedule.vue");
-// const StudentAssignmentsPending = () => import("@/pages/student/assignments/Pending.vue");
-// const StudentAssignmentsSubmitted = () => import("@/pages/student/assignments/Submitted.vue");
-// const StudentAssignmentsGraded = () => import("@/pages/student/assignments/Graded.vue");
-// const StudentGrades = () => import("@/pages/student/Grades.vue");
-// const StudentGradeReport = () => import("@/pages/student/grades/Report.vue");
-// const StudentHonors = () => import("@/pages/student/Honors.vue");
-// const StudentAttendance = () => import("@/pages/student/Attendance.vue");
+const StudentSubjects = () => import("@/pages/student/Subjects.vue");
+const StudentSchedule = () => import("@/pages/student/Schedule.vue");
+const StudentAssignmentsPending = () => import("@/pages/student/assignments/Pending.vue");
+const StudentAssignmentsSubmitted = () => import("@/pages/student/assignments/Submitted.vue");
+const StudentAssignmentsGraded = () => import("@/pages/student/assignments/Graded.vue");
+const StudentGrades = () => import("@/pages/student/Grades.vue");
+const StudentGradeReport = () => import("@/pages/student/grades/Report.vue");
+const StudentHonors = () => import("@/pages/student/Honors.vue");
+const StudentAttendance = () => import("@/pages/student/Attendance.vue");
 // const StudentAttendanceSummary = () => import("@/pages/student/attendance/Summary.vue");
 // const StudentMaterials = () => import("@/pages/student/Materials.vue");
 // const StudentPayments = () => import("@/pages/student/Payments.vue");
@@ -357,60 +357,60 @@ const routes: RouteRecordRaw[] = [
     component: StudentDashboard,
     // meta: { requiresAuth: true, role: "Student" },
   },
-  // {
-  //   path: "/student/subjects",
-  //   name: "StudentSubjects",
-  //   component: StudentSubjects,
-  //   meta: { requiresAuth: true, role: "Student" },
-  // },
-  // {
-  //   path: "/student/schedule",
-  //   name: "StudentSchedule",
-  //   component: StudentSchedule,
-  //   meta: { requiresAuth: true, role: "Student" },
-  // },
-  // {
-  //   path: "/student/assignments/pending",
-  //   name: "StudentAssignmentsPending",
-  //   component: StudentAssignmentsPending,
-  //   meta: { requiresAuth: true, role: "Student" },
-  // },
-  // {
-  //   path: "/student/assignments/submitted",
-  //   name: "StudentAssignmentsSubmitted",
-  //   component: StudentAssignmentsSubmitted,
-  //   meta: { requiresAuth: true, role: "Student" },
-  // },
-  // {
-  //   path: "/student/assignments/graded",
-  //   name: "StudentAssignmentsGraded",
-  //   component: StudentAssignmentsGraded,
-  //   meta: { requiresAuth: true, role: "Student" },
-  // },
-  // {
-  //   path: "/student/grades",
-  //   name: "StudentGrades",
-  //   component: StudentGrades,
-  //   meta: { requiresAuth: true, role: "Student" },
-  // },
-  // {
-  //   path: "/student/grades/report",
-  //   name: "StudentGradeReport",
-  //   component: StudentGradeReport,
-  //   meta: { requiresAuth: true, role: "Student" },
-  // },
-  // {
-  //   path: "/student/honors",
-  //   name: "StudentHonors",
-  //   component: StudentHonors,
-  //   meta: { requiresAuth: true, role: "Student" },
-  // },
-  // {
-  //   path: "/student/attendance",
-  //   name: "StudentAttendance",
-  //   component: StudentAttendance,
-  //   meta: { requiresAuth: true, role: "Student" },
-  // },
+  {
+    path: "/student/subjects",
+    name: "StudentSubjects",
+    component: StudentSubjects,
+    // meta: { requiresAuth: true, role: "Student" },
+  },
+  {
+    path: "/student/schedule",
+    name: "StudentSchedule",
+    component: StudentSchedule,
+    // meta: { requiresAuth: true, role: "Student" },
+  },
+  {
+    path: "/student/assignments/pending",
+    name: "StudentAssignmentsPending",
+    component: StudentAssignmentsPending,
+    // meta: { requiresAuth: true, role: "Student" },
+  },
+  {
+    path: "/student/assignments/submitted",
+    name: "StudentAssignmentsSubmitted",
+    component: StudentAssignmentsSubmitted,
+    // meta: { requiresAuth: true, role: "Student" },
+  },
+  {
+    path: "/student/assignments/graded",
+    name: "StudentAssignmentsGraded",
+    component: StudentAssignmentsGraded,
+    // meta: { requiresAuth: true, role: "Student" },
+  },
+  {
+    path: "/student/grades",
+    name: "StudentGrades",
+    component: StudentGrades,
+    // meta: { requiresAuth: true, role: "Student" },
+  },
+  {
+    path: "/student/grades/report",
+    name: "StudentGradeReport",
+    component: StudentGradeReport,
+    // meta: { requiresAuth: true, role: "Student" },
+  },
+  {
+    path: "/student/honors",
+    name: "StudentHonors",
+    component: StudentHonors,
+    // meta: { requiresAuth: true, role: "Student" },
+  },
+  {
+    path: "/student/attendance",
+    name: "StudentAttendance",
+    component: StudentAttendance,
+    // meta: { requiresAuth: true, role: "Student" },
+  },
   // {
   //   path: "/student/attendance/summary",
   //   name: "StudentAttendanceSummary",
